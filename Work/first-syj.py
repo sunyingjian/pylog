@@ -2,6 +2,7 @@ import os
 import shutil
 import sys
 import SVC_Run
+import SVR_Run
 # import RF_Run
 # import KNN_Run
 # import GBDTR_Run
@@ -244,7 +245,7 @@ class Main_Win(QMainWindow):
 
         btn_SVR = QPushButton('支持向量回归')
         self.fontui(btn_SVR)
-        # btn_SVR.clicked.connect(lambda: self.Add_Page(KNN_Run.newMainWindow()))
+        btn_SVR.clicked.connect(lambda: self.Add_Page(SVR_Run.newMainWindow()))
 
         btn_tree = QPushButton('决策树')
         self.fontui(btn_tree)

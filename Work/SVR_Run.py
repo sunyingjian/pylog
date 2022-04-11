@@ -230,16 +230,15 @@ class newMainWindow(QWidget):
             C = self.downleft.spinBox.value()
             kernel = self.downleft.combox_kernal.currentText()
             gamma = self.downleft.combox_gamma.currentText()
-            decision_function_shape = self.downleft.combox_DFS.currentText()
+            # decision_function_shape = self.downleft.combox_DFS.currentText()
             options = {'C': C,
-                       'kernel': kernel, 'gamma': gamma,
-                       'decision_function_shape': decision_function_shape
+                       'kernel': kernel, 'gamma': gamma
                        }
             data = data_process(datafile_train, datafile_test, self.downleft.feature_selected, self.downleft.feature_pre)
             res = train_useSVM(data, options)
-            self.downright.textLine_mae.setText(str(res['acc']))
-            self.downright.textLine_mse.setText(str(res['recall_score']))
-            self.downright.textLine_r2.setText(str(res['f1_score']))
+            self.downright.textLine_mae.setText(str(res['MAE']))
+            self.downright.textLine_mse.setText(str(res['MSE']))
+            self.downright.textLine_r2.setText(str(res['R2']))
             # print(str(res['confusion_matrix']))
             # self.downright.showWidget.setText(str(res['confusion_matrix']))
         print('退出fun_run函数')
