@@ -7,7 +7,7 @@ import SVR_Run
 # import KNN_Run
 # import GBDTR_Run
 # import LSTM_Run
-# import LR_Run
+import LR_Run
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
@@ -182,7 +182,7 @@ class Main_Win(QMainWindow):
         self.tab1.setLayout(layout1)
         btn_LR = QPushButton('逻辑回归')
         self.fontui(btn_LR)
-        # btn_LR.clicked.connect(lambda:self.Add_Page(LR_Run.newMainWindow()))
+        btn_LR.clicked.connect(lambda:self.Add_Page(LR_Run.newMainWindow()))
 
         btn_SVM = QPushButton('支持向量机')
         self.fontui(btn_SVM)
