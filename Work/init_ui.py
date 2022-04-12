@@ -131,8 +131,8 @@ class topright(QWidget):
 
         self.stack = QStackedWidget()
         self.stack1 = ShowImage_TopRight.ApplicationWindow()
-        self.stack2 = QWidget()
-        self.stack3 = QWidget()
+        self.stack2 = ShowImage_TopRight.ApplicationWindow()
+        self.stack3 = ShowImage_TopRight.ApplicationWindow()
         self.tab1UI()
         self.tab2UI()
         self.tab3UI()

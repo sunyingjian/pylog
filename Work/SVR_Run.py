@@ -44,7 +44,8 @@ def train_useSVM(data,options):
     r2 = metrics.r2_score(data['y_valid'],y_pred)
     res = {'MAE':mae,
            'MSE':mse,
-           'R2':r2}
+           'R2':r2,
+           'data':y_pred}
     return res
 
 class Downleft(init_ui.downleft):
@@ -97,7 +98,7 @@ class newMainWindow(QWidget):
     def __init__(self):
         super(newMainWindow, self).__init__()
         self.initUI()
-        self.setObjectName('SVM')
+        self.setObjectName('SVR')
 
     def initUI(self):
         # self.widget = QWidget()
@@ -226,7 +227,7 @@ class newMainWindow(QWidget):
                 self.downleft.feature_pre != None):
             datafile_train = './data/' + self.downleft.data_train
             datafile_test = './data/' + self.downleft.data_val
-            data_test = pd.read_csv(datafile_train)
+            # data_test = pd.read_csv(datafile_train)
             C = self.downleft.spinBox.value()
             kernel = self.downleft.combox_kernal.currentText()
             gamma = self.downleft.combox_gamma.currentText()
@@ -240,7 +241,7 @@ class newMainWindow(QWidget):
             self.downright.textLine_mse.setText(str(res['MSE']))
             self.downright.textLine_r2.setText(str(res['R2']))
             # print(str(res['confusion_matrix']))
-            # self.downright.showWidget.setText(str(res['confusion_matrix']))
+            self.downright.showWidget.setText(str(res['data']))
         print('退出fun_run函数')
     def showimage_topright(self):
             for i in range(self.downleft.layout_tab1_grid.count()):
