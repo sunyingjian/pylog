@@ -5,6 +5,7 @@ import SVC_Run
 import SVR_Run
 import GMM_Run
 import KNN_Run
+import Tree_Run
 # import GBDTR_Run
 # import LSTM_Run
 import LR_Run
@@ -14,7 +15,6 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtWidgets import QApplication, QAction
 from PyQt5.QtGui import QIcon
 import pyqtgraph as pg
-import qdarkstyle
 from PyQt5 import QtWidgets
 
 
@@ -198,6 +198,7 @@ class Main_Win(QMainWindow):
 
         btn_tree = QPushButton('决策树')
         self.fontui(btn_tree)
+        btn_tree.clicked.connect(lambda :self.Add_Page(Tree_Run.newMainWindow()))
 
         btn_gbdt = QPushButton('梯度提升决策树')
         self.fontui(btn_gbdt)
