@@ -4,7 +4,7 @@ import sys
 import SVC_Run
 import SVR_Run
 # import RF_Run
-# import KNN_Run
+import KNN_Run
 # import GBDTR_Run
 # import LSTM_Run
 import LR_Run
@@ -194,7 +194,7 @@ class Main_Win(QMainWindow):
 
         btn_KNN = QPushButton('K近邻')
         self.fontui(btn_KNN)
-        # btn_KNN.clicked.connect(lambda :self.Add_Page(KNN_Run.newMainWindow()))
+        btn_KNN.clicked.connect(lambda :self.Add_Page(KNN_Run.newMainWindow()))
 
         btn_tree = QPushButton('决策树')
         self.fontui(btn_tree)
