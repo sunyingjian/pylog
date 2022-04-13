@@ -3,7 +3,7 @@ import shutil
 import sys
 import SVC_Run
 import SVR_Run
-# import RF_Run
+import GMM_Run
 import KNN_Run
 # import GBDTR_Run
 # import LSTM_Run
@@ -205,6 +205,8 @@ class Main_Win(QMainWindow):
 
         btn_gmm = QPushButton('高斯混合模型')
         self.fontui(btn_gmm)
+        btn_gmm.clicked.connect(lambda :self.Add_Page(GMM_Run.newMainWindow()))
+
 
         btn_dnn = QPushButton('全连接神经网络')
         self.fontui(btn_dnn)
