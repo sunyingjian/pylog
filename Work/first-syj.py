@@ -8,6 +8,7 @@ import KNN_Run
 import Tree_Run
 import RF_Run
 import GBDT_Run
+import MLR_Run
 # import LSTM_Run
 import LR_Run
 from PyQt5 import QtCore, QtGui
@@ -238,6 +239,7 @@ class Main_Win(QMainWindow):
         self.tab2.setLayout(layout1)
         btn_MLR = QPushButton('多元线性回归')
         self.fontui(btn_MLR)
+        btn_MLR.clicked.connect(lambda:self.Add_Page(MLR_Run.newMainWindow()))
 
         btn_ridge = QPushButton('岭回归')
         self.fontui(btn_ridge)
