@@ -7,7 +7,7 @@ import GMM_Run
 import KNN_Run
 import Tree_Run
 import RF_Run
-# import GBDTR_Run
+import GBDT_Run
 # import LSTM_Run
 import LR_Run
 from PyQt5 import QtCore, QtGui
@@ -203,7 +203,7 @@ class Main_Win(QMainWindow):
 
         btn_gbdt = QPushButton('梯度提升决策树')
         self.fontui(btn_gbdt)
-        # btn_gbdt.clicked.connect(lambda :self.Add_Page(GBDTR_Run.newMainWindow()))
+        btn_gbdt.clicked.connect(lambda :self.Add_Page(GBDT_Run.newMainWindow()))
 
         btn_gmm = QPushButton('高斯混合模型')
         self.fontui(btn_gmm)

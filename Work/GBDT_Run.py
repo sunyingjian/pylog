@@ -4,7 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 import init_ui
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import GradientBoostingClassifier
 import sklearn.metrics as metrics
 import pandas as pd
 from sklearn.pipeline import make_pipeline
@@ -21,11 +21,10 @@ def data_process(train_path,validation_path,select_features,pre_feature):
     data = {'X_train':train_data_x,'y_train':train_data_y,'X_valid':valid_data_x,'y_valid':valid_data_y}
     return data
 
-def train_useRF(data,options):
-    model = make_pipeline(StandardScaler(),RandomForestClassifier(n_estimators=int(options['n_estimators']),
+def train_useGBDT(data,options):
+    model = make_pipeline(StandardScaler(),GradientBoostingClassifier(n_estimators=int(options['n_estimators']),
                 criterion=options['criterion'],
-                bootstrap=options['bootstrap'],
-                min_samples_split=options['min_samples_split']))
+                loss=options['loss']))
     model.fit(data['X_train'],data['y_train'])
     y_pred = model.predict(data['X_valid'])
     acc = metrics.precision_score(data['y_valid'],y_pred,average='micro')
@@ -50,18 +49,20 @@ class Downleft(init_ui.downleft):
         self.combox_criterion.setEnabled(True)
         self.combox_criterion.addItem("")
         self.combox_criterion.addItem("")
-        self.combox_criterion.setCurrentText("gini")
-        self.combox_criterion.setItemText(0, "gini")
-        self.combox_criterion.setItemText(1, "entropy")
-        self.label_bootstrap = QLabel("bootstrap")
-        self.label_bootstrap.setEnabled(True)
-        self.combox_bootstrap = QComboBox()
-        self.combox_bootstrap.setEnabled(True)
-        self.combox_bootstrap.addItem("")
-        self.combox_bootstrap.addItem("")
-        self.combox_bootstrap.setCurrentText("False")
-        self.combox_bootstrap.setItemText(0, "False")
-        self.combox_bootstrap.setItemText(1, "True")
+        self.combox_criterion.addItem("")
+        self.combox_criterion.setCurrentText("friedman_mse")
+        self.combox_criterion.setItemText(0, "friedman_mse")
+        self.combox_criterion.setItemText(1, "mse")
+        self.combox_criterion.setItemText(2, "mae")
+        self.label_loss = QLabel("loss")
+        self.label_loss.setEnabled(True)
+        self.combox_loss = QComboBox()
+        self.combox_loss.setEnabled(True)
+        self.combox_loss.addItem("")
+        self.combox_loss.addItem("")
+        self.combox_loss.setCurrentText("deviance")
+        self.combox_loss.setItemText(0, "deviance")
+        self.combox_loss.setItemText(1, "exponential")
         self.label_n_estimators = QLabel("n_estimators")
         self.label_n_estimators.setEnabled(True)
         self.spinBox_n_estimators = QSpinBox()
@@ -71,22 +72,11 @@ class Downleft(init_ui.downleft):
         self.spinBox_n_estimators.setMaximum(1000)
         self.spinBox_n_estimators.setSingleStep(1)
         self.spinBox_n_estimators.setProperty("value", 100)
-        self.spinBox_n_estimators.setObjectName("spinBox_n_estimators")
-        self.label_min_samples_split = QLabel("最小样本数")
-        self.label_min_samples_split.setEnabled(True)
-        self.spinBox_min_samples_split = QSpinBox()
-        self.spinBox_min_samples_split.setEnabled(True)
-        self.spinBox_min_samples_split.setPrefix('')
-        self.spinBox_min_samples_split.setMinimum(2)
-        self.spinBox_min_samples_split.setMaximum(100)
-        self.spinBox_min_samples_split.setSingleStep(1)
-        self.spinBox_min_samples_split.setProperty("value", 2)
-        self.spinBox_min_samples_split.setObjectName("spinBox_min_samples_split")
+        self.spinBox_n_estimators.setObjectName("n_estimators")
         formLayout = QFormLayout()
         formLayout.addRow(self.label_criterion, self.combox_criterion)
-        formLayout.addRow(self.label_bootstrap, self.combox_bootstrap)
+        formLayout.addRow(self.label_loss, self.combox_loss)
         formLayout.addRow(self.label_n_estimators, self.spinBox_n_estimators)
-        formLayout.addRow(self.label_min_samples_split, self.spinBox_min_samples_split)
         hbox.addLayout(formLayout)
         vbox.addLayout(hbox)
         self.tab3.setLayout(vbox)
@@ -96,7 +86,7 @@ class newMainWindow(QWidget):
     def __init__(self):
         super(newMainWindow, self).__init__()
         self.initUI()
-        self.setObjectName('RF')
+        self.setObjectName('GBDT')
 
     def initUI(self):
         # self.widget = QWidget()
@@ -227,15 +217,13 @@ class newMainWindow(QWidget):
             datafile_test = './data/' + self.downleft.data_val
             data_test = pd.read_csv(datafile_train)
             criterion = self.downleft.combox_criterion.currentText()
-            bootstrap = self.downleft.combox_bootstrap.currentText()
+            loss = self.downleft.combox_loss.currentText()
             n_estimators = self.downleft.spinBox_n_estimators.value()
-            min_samples_split = self.downleft.spinBox_min_samples_split.value()
             options = {'criterion': criterion,
-                       'bootstrap': bootstrap, 'n_estimators': n_estimators,
-                       'min_samples_split': min_samples_split
+                       'loss': loss, 'n_estimators': n_estimators,
                        }
             data = data_process(datafile_train, datafile_test, self.downleft.feature_selected, self.downleft.feature_pre)
-            res = train_useRF(data, options)
+            res = train_useGBDT(data, options)
             self.downright.textLine_acc.setText(str(res['acc']))
             self.downright.textLine_recall.setText(str(res['recall_score']))
             self.downright.textLine_f1.setText(str(res['f1_score']))
