@@ -6,6 +6,7 @@ import SVR_Run
 import GMM_Run
 import KNN_Run
 import Tree_Run
+import RF_Run
 # import GBDTR_Run
 # import LSTM_Run
 import LR_Run
@@ -190,7 +191,7 @@ class Main_Win(QMainWindow):
         
         btn_RF = QPushButton('随机森林')
         self.fontui(btn_RF)
-        # btn_RF.clicked.connect(lambda :self.Add_Page(RF_Run.newMainWindow()))
+        btn_RF.clicked.connect(lambda :self.Add_Page(RF_Run.newMainWindow()))
 
         btn_KNN = QPushButton('K近邻')
         self.fontui(btn_KNN)
