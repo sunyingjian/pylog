@@ -12,6 +12,7 @@ import MLR_Run
 import Ridge_Run
 # import LSTM_Run
 import LR_Run
+import Lasso_Run
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
@@ -248,7 +249,7 @@ class Main_Win(QMainWindow):
 
         btn_lasso = QPushButton('套索回归')
         self.fontui(btn_lasso)
-        # btn_lasso.clicked.connect(lambda: self.Add_Page(RF_Run.newMainWindow()))
+        btn_lasso.clicked.connect(lambda: self.Add_Page(Lasso_Run.newMainWindow()))
 
         btn_SVR = QPushButton('支持向量回归')
         self.fontui(btn_SVR)
