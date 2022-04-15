@@ -10,6 +10,7 @@ import RF_Run
 import GBDT_Run
 import MLR_Run
 import Ridge_Run
+import TreeR_Run
 # import LSTM_Run
 import LR_Run
 import Lasso_Run
@@ -257,6 +258,7 @@ class Main_Win(QMainWindow):
 
         btn_tree = QPushButton('决策树')
         self.fontui(btn_tree)
+        btn_tree.clicked.connect(lambda: self.Add_Page(TreeR_Run.newMainWindow()))
 
         btn_rf = QPushButton('随机森林')
         self.fontui(btn_rf)
