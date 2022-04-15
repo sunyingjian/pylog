@@ -9,6 +9,7 @@ import Tree_Run
 import RF_Run
 import GBDT_Run
 import MLR_Run
+import Ridge_Run
 # import LSTM_Run
 import LR_Run
 from PyQt5 import QtCore, QtGui
@@ -243,7 +244,7 @@ class Main_Win(QMainWindow):
 
         btn_ridge = QPushButton('岭回归')
         self.fontui(btn_ridge)
-        # btn_ridge.clicked.connect(lambda: self.Add_Page(SVC_Run.newMainWindow()))
+        btn_ridge.clicked.connect(lambda: self.Add_Page(Ridge_Run.newMainWindow()))
 
         btn_lasso = QPushButton('套索回归')
         self.fontui(btn_lasso)

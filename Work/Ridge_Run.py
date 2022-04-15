@@ -4,7 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 import init_ui
 import pandas as pd
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Ridge
 import sklearn.metrics as metrics
 import pandas as pd
 from sklearn.pipeline import make_pipeline
@@ -21,8 +21,8 @@ def data_process(train_path,validation_path,select_features,pre_feature):
     data = {'X_train':train_data_x,'y_train':train_data_y,'X_valid':valid_data_x,'y_valid':valid_data_y}
     return data
 
-def train_useMLR(data,options):
-    model = make_pipeline(StandardScaler(),LinearRegression(fit_intercept=options['fit_intercept'],
+def train_useRidge(data,options):
+    model = make_pipeline(StandardScaler(),Ridge(fit_intercept=options['fit_intercept'],
                 normalize=options['normalize'],
                 copy_X=options['copy_X']))
     model.fit(data['X_train'],data['y_train'])
@@ -82,7 +82,7 @@ class newMainWindow(QWidget):
     def __init__(self):
         super(newMainWindow, self).__init__()
         self.initUI()
-        self.setObjectName('MLR')
+        self.setObjectName('Ridge_R')
 
     def initUI(self):
         # self.widget = QWidget()
@@ -220,7 +220,7 @@ class newMainWindow(QWidget):
                        'normalize': normalize, 'copy_X': copy_X
                        }
             data = data_process(datafile_train, datafile_test, self.downleft.feature_selected, self.downleft.feature_pre)
-            res = train_useMLR(data, options)
+            res = train_useRidge(data, options)
             self.downright.textLine_mae.setText(str(res['MAE']))
             self.downright.textLine_mse.setText(str(res['MSE']))
             self.downright.textLine_r2.setText(str(res['R2']))
