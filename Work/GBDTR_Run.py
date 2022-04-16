@@ -89,7 +89,7 @@ class newMainWindow(QWidget):
     def __init__(self):
         super(newMainWindow, self).__init__()
         self.initUI()
-        self.setObjectName('GBDT')
+        self.setObjectName('GBDTR')
 
     def initUI(self):
         # self.widget = QWidget()
@@ -227,11 +227,11 @@ class newMainWindow(QWidget):
                        }
             data = data_process(datafile_train, datafile_test, self.downleft.feature_selected, self.downleft.feature_pre)
             res = train_useGBDTR(data, options)
-            self.downright.textLine_acc.setText(str(res['acc']))
-            self.downright.textLine_recall.setText(str(res['recall_score']))
-            self.downright.textLine_f1.setText(str(res['f1_score']))
-            print(str(res['confusion_matrix']))
-            self.downright.showWidget.setText(str(res['confusion_matrix']))
+            self.downright.textLine_mae.setText(str(res['MAE']))
+            self.downright.textLine_mse.setText(str(res['MSE']))
+            self.downright.textLine_r2.setText(str(res['R2']))
+            # print(str(res['confusion_matrix']))
+            self.downright.showWidget.setText(str(res['data']))
         print('退出fun_run函数')
     def showimage_topright(self):
             for i in range(self.downleft.layout_tab1_grid.count()):
