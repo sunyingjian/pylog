@@ -7,6 +7,7 @@ import GMM_Run
 import KNN_Run
 import Tree_Run
 import RF_Run
+import RFR_Run
 import GBDT_Run
 import MLR_Run
 import Ridge_Run
@@ -262,6 +263,7 @@ class Main_Win(QMainWindow):
 
         btn_rf = QPushButton('随机森林')
         self.fontui(btn_rf)
+        btn_rf.clicked.connect(lambda: self.Add_Page(RFR_Run.newMainWindow()))
 
         btn_gbdt = QPushButton('梯度提升决策树')
         self.fontui(btn_gbdt)
