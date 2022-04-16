@@ -9,6 +9,7 @@ import Tree_Run
 import RF_Run
 import RFR_Run
 import GBDT_Run
+import GBDTR_Run
 import MLR_Run
 import Ridge_Run
 import TreeR_Run
@@ -267,6 +268,7 @@ class Main_Win(QMainWindow):
 
         btn_gbdt = QPushButton('梯度提升决策树')
         self.fontui(btn_gbdt)
+        btn_gbdt.clicked.connect(lambda: self.Add_Page(GBDTR_Run.newMainWindow()))
 
         btn_dnn = QPushButton('全连接神经网络')
         self.fontui(btn_dnn)
