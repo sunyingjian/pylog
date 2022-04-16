@@ -11,6 +11,7 @@ import RFR_Run
 import GBDT_Run
 import GBDTR_Run
 import MLR_Run
+import MLP_Run
 import Ridge_Run
 import TreeR_Run
 # import LSTM_Run
@@ -218,6 +219,7 @@ class Main_Win(QMainWindow):
 
         btn_dnn = QPushButton('全连接神经网络')
         self.fontui(btn_dnn)
+        btn_dnn.clicked.connect(lambda :self.Add_Page(MLP_Run.newMainWindow()))
 
         btn_lstm = QPushButton('LSTM模型')
         self.fontui(btn_lstm)
