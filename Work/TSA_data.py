@@ -45,3 +45,8 @@ def data_pred(pred_1,pred_2):
     y_pred_true = np.append(y_true_pred_1,y_true_pred_2)
     y_pred_1 = pd.DataFrame(y_pred_true)+1
     return y_pred_1
+
+
+
+def data_pred1(data):
+    return data
