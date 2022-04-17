@@ -15,7 +15,11 @@ import MLP_Run
 import Ridge_Run
 import TreeR_Run
 import MLPR_Run
-# import LSTM_Run
+import LSTM_Run
+import LSTMR_Run
+import TCN_Run
+import RTCN_Run
+import SAPWFF_Run
 import LR_Run
 import Lasso_Run
 from PyQt5 import QtCore, QtGui
@@ -224,10 +228,11 @@ class Main_Win(QMainWindow):
 
         btn_lstm = QPushButton('LSTM模型')
         self.fontui(btn_lstm)
-        # btn_lstm.clicked.connect(lambda :self.Add_Page(LSTM_Run.newMainWindow()))
+        btn_lstm.clicked.connect(lambda :self.Add_Page(LSTM_Run.newMainWindow()))
 
         btn_sapwff = QPushButton('SAPWFF')
         self.fontui(btn_sapwff)
+        btn_sapwff.clicked.connect(lambda :self.Add_Page(SAPWFF_Run.newMainWindow()))
 
         layout1.addWidget(btn_SVM,0,0,1,2,Qt.AlignTop)
         layout1.addWidget(btn_LR,1,0,1,1,Qt.AlignTop)
@@ -279,9 +284,11 @@ class Main_Win(QMainWindow):
 
         btn_lstm = QPushButton('LSTM模型')
         self.fontui(btn_lstm)
+        btn_lstm.clicked.connect(lambda: self.Add_Page(LSTMR_Run.newMainWindow()))
 
         btn_rtcn = QPushButton('R-TCN模型')
         self.fontui(btn_rtcn)
+        btn_rtcn.clicked.connect(lambda: self.Add_Page(RTCN_Run.newMainWindow()))
 
         layout1.addWidget(btn_MLR, 0, 0, 1, 2, Qt.AlignTop)
         layout1.addWidget(btn_ridge, 1, 0, 1, 1,Qt.AlignTop)

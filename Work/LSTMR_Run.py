@@ -2,7 +2,6 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
-from Work.LSTM_Run import train_uselstm
 import init_ui
 import pandas as pd
 import tensorflow as tf
