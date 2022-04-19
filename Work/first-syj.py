@@ -6,7 +6,7 @@ import SVR_Run
 import GMM_Run
 import KNN_Run
 import Tree_Run
-import K-Means_Run
+import Kmeans_Run
 import RF_Run
 import RFR_Run
 import GBDT_Run
@@ -306,6 +306,7 @@ class Main_Win(QMainWindow):
         self.tab3.setLayout(layout1)
         btn_kmeans = QPushButton('K聚类')
         self.fontui(btn_kmeans)
+        btn_kmeans.clicked.connect(lambda: self.Add_Page(Kmeans_Run.newMainWindow()))
 
         btn_lda = QPushButton('LDA聚类')
         self.fontui((btn_lda))

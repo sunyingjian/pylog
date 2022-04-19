@@ -21,19 +21,14 @@ def data_process(train_path,validation_path,select_features,pre_feature):
     data = {'X_train':train_data_x,'y_train':train_data_y,'X_valid':valid_data_x,'y_valid':valid_data_y}
     return data
 
-def train_useSVM(data,options):
-    model = make_pipeline(StandardScaler(),KMeans(n_clusters=options['n_clusters'],
+def train_usekmeans(data,options):
+    model = make_pipeline(StandardScaler(),KMeans(n_clusters=int(options['n_clusters']),
                 init=options['init'],
+                precompute_distances=options['precompute_distances'],
                 algorithm=options['algorithm']))
-    model.fit(data['X_train'])
+    model.fit(data['X_train'],data['y_train'])
     return model.get_params()
 
-class Topleft(init_ui.topleft):
-    def __init__(self):
-        super().__init__()
-    def initui(self):
-        self.tab1 = QWidget()
-        self.tab1.setObjectName("聚类数据选择")
 
 class Downleft(init_ui.downleft):
     def __init__(self):
@@ -41,51 +36,65 @@ class Downleft(init_ui.downleft):
     def tab3UI(self):
         vbox = QVBoxLayout()
         hbox = QHBoxLayout()
-        self.label_C = QLabel('惩罚系数C')
-        self.label_C.setEnabled(True)
+        self.label_n_clusters = QLabel('n_clusters:')
+        self.label_n_clusters.setEnabled(True)
         self.spinBox = QDoubleSpinBox()
         self.spinBox.setEnabled(True)
         self.spinBox.setPrefix("")
-        self.spinBox.setMinimum(0.0)
-        self.spinBox.setMaximum(10.1)
-        self.spinBox.setSingleStep(0.1)
-        self.spinBox.setProperty("value", 1.0)
+        self.spinBox.setMinimum(2)
+        self.spinBox.setMaximum(100)
+        self.spinBox.setSingleStep(1)
+        self.spinBox.setProperty("value", 8)
         self.spinBox.setObjectName("spinBox")
-        self.label_kernal = QLabel("Kernal")
-        self.label_kernal.setEnabled(True)
-        self.combox_kernal = QComboBox()
-        self.combox_kernal.setEnabled(True)
-        self.combox_kernal.addItem("")
-        self.combox_kernal.addItem("")
-        self.combox_kernal.addItem("")
-        self.combox_kernal.addItem("")
-        self.combox_kernal.setCurrentText("rbf")
-        self.combox_kernal.setItemText(0, "linear")
-        self.combox_kernal.setItemText(1, "poly")
-        self.combox_kernal.setItemText(2, "rbf")
-        self.combox_kernal.setItemText(3, "sigmoid")
-        self.label_gamma = QLabel("Gamma")
-        self.label_gamma.setEnabled(True)
-        self.combox_gamma = QComboBox()
-        self.combox_gamma.setEnabled(True)
-        self.combox_gamma.addItem("")
-        self.combox_gamma.addItem("")
-        self.combox_gamma.setItemText(0, "auto")
-        self.combox_gamma.setItemText(1, "scale")
+        self.label_init = QLabel("init")
+        self.label_init.setEnabled(True)
+        self.combox_init = QComboBox()
+        self.combox_init.setEnabled(True)
+        self.combox_init.addItem("")
+        self.combox_init.addItem("")
+        self.combox_init.addItem("")
+        self.combox_init.addItem("")
+        self.combox_init.setCurrentText("k-means++")
+        self.combox_init.setItemText(0, "k-means++")
+        self.combox_init.setItemText(1, "random")
+        self.combox_init.setItemText(2, "ndarray")
+        self.combox_init.setItemText(3, "callable")
+        self.label_precompute_distances = QLabel("precompute_distances:")
+        self.label_precompute_distances.setEnabled(True)
+        self.combox_precompute_distances = QComboBox()
+        self.combox_precompute_distances.setEnabled(True)
+        self.combox_precompute_distances.addItem("")        
+        self.combox_precompute_distances.addItem("")
+        self.combox_precompute_distances.addItem("")
+        self.combox_precompute_distances.setCurrentText("True")
+        self.combox_precompute_distances.setItemText(0, "auto")
+        self.combox_precompute_distances.setItemText(1, "True")
+        self.combox_precompute_distances.setItemText(2, "False")
+        self.label_algorithm = QLabel("algorithm:")
+        self.label_algorithm.setEnabled(True)
+        self.combox_algorithm = QComboBox()
+        self.combox_algorithm.setEnabled(True)
+        self.combox_algorithm.addItem("")
+        self.combox_algorithm.addItem("")
+        self.combox_algorithm.addItem("")
+        self.combox_algorithm.setCurrentText("auto")
+        self.combox_algorithm.setItemText(0, "auto")
+        self.combox_algorithm.setItemText(1, "full")
+        self.combox_algorithm.setItemText(2, "elkan")
         formLayout = QFormLayout()
-        formLayout.addRow(self.label_C,self.spinBox)
-        formLayout.addRow(self.label_kernal,self.combox_kernal)
-        formLayout.addRow(self.label_gamma,self.combox_gamma)
+        formLayout.addRow(self.label_n_clusters,self.spinBox)
+        formLayout.addRow(self.label_init,self.combox_init)
+        formLayout.addRow(self.label_precompute_distances,self.combox_precompute_distances)
+        formLayout.addRow(self.label_algorithm,self.combox_algorithm)
         hbox.addLayout(formLayout)
         vbox.addLayout(hbox)
         self.tab3.setLayout(vbox)
-
 
 class newMainWindow(QWidget):
     def __init__(self):
         super(newMainWindow, self).__init__()
         self.initUI()
-        self.setObjectName('SVR')
+        self.setObjectName('kmeans')
 
     def initUI(self):
         # self.widget = QWidget()
@@ -112,7 +121,7 @@ class newMainWindow(QWidget):
         self.topright.setPalette(palette3)
         self.topright.setAutoFillBackground(True)
 
-        self.downright = init_ui.downright_r()
+        self.downright = init_ui.downright_cl()
         palette4 = QPalette()
         palette4.setColor(self.downright.backgroundRole(), QColor(245, 245 ,245))  # 背景颜色
         self.downright.setPalette(palette4)
@@ -214,21 +223,19 @@ class newMainWindow(QWidget):
                 self.downleft.feature_pre != None):
             datafile_train = './data/' + self.downleft.data_train
             datafile_test = './data/' + self.downleft.data_val
-            # data_test = pd.read_csv(datafile_train)
-            C = self.downleft.spinBox.value()
-            kernel = self.downleft.combox_kernal.currentText()
-            gamma = self.downleft.combox_gamma.currentText()
-            # decision_function_shape = self.downleft.combox_DFS.currentText()
-            options = {'C': C,
-                       'kernel': kernel, 'gamma': gamma
+            data_test = pd.read_csv(datafile_train)
+            n_clusters = self.downleft.spinBox.value()
+            init = self.downleft.combox_init.currentText()
+            precompute_distances = self.downleft.combox_precompute_distances.currentText()
+            algorithm = self.downleft.combox_algorithm.currentText()
+            options = {'n_clusters': n_clusters,
+                       'init': init, 'precompute_distances': precompute_distances,
+                       'algorithm': algorithm
                        }
             data = data_process(datafile_train, datafile_test, self.downleft.feature_selected, self.downleft.feature_pre)
-            res = train_useSVM(data, options)
-            self.downright.textLine_mae.setText(str(res['MAE']))
-            self.downright.textLine_mse.setText(str(res['MSE']))
-            self.downright.textLine_r2.setText(str(res['R2']))
-            # print(str(res['confusion_matrix']))
-            self.downright.showWidget.setText(str(res['data']))
+            res = train_usekmeans(data, options)
+            # 画图
+            self.downright.showWidget.setText(str(res))
         print('退出fun_run函数')
     def showimage_topright(self):
             for i in range(self.downleft.layout_tab1_grid.count()):

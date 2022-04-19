@@ -342,3 +342,29 @@ class downright_r(QWidget):
         palette.setColor(self.showWidget.backgroundRole(), QColor(255, 255, 255))  # 背景颜色
         self.showWidget.setPalette(palette)
         self.showWidget.setAutoFillBackground(True)
+
+class downright_cl(downright_r):
+    def __init__(self):
+        super().__init__()
+    def initUI(self):
+        self.hbox = QHBoxLayout()
+        self.hbox1 = QHBoxLayout()
+        self.hbox2 = QHBoxLayout()
+        self.vbox = QVBoxLayout()
+
+        self.showWidget = QTextBrowser()
+        qfont = QFont()
+        qfont.setPointSize(23)
+        self.showWidget.setFont(qfont)
+        self.showWidget.setEnabled(True)
+        self.hbox1.addWidget(self.showWidget)
+        self.hbox2.addStretch(0)
+        self.hbox2.addStretch(1)
+        self.vbox.addLayout(self.hbox)
+        self.vbox.addLayout(self.hbox1)
+        self.vbox.addLayout(self.hbox2)
+        self.setLayout(self.vbox)
+        palette = QPalette()
+        palette.setColor(self.showWidget.backgroundRole(), QColor(255, 255, 255))  # 背景颜色
+        self.showWidget.setPalette(palette)
+        self.showWidget.setAutoFillBackground(True)
