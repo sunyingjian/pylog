@@ -95,10 +95,10 @@ class Plot():
                 plt.title(title)
 
         # Axis labels
-        plt.xlabel('Principal Component 1')
-        plt.ylabel('Principal Component 2')
+        plt.xlabel('')
+        plt.ylabel('')
 
-        plt.show()
+        plt.savefig(Work/image/plt.jpg)
 
     # Plot the dataset X and the corresponding labels y in 3D using PCA.
     def plot_in_3d(self, X, y=None):

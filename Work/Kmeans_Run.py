@@ -9,6 +9,7 @@ import sklearn.metrics as metrics
 import pandas as pd
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+from utils import misc
 
 
 def data_process(train_path,validation_path,select_features,pre_feature):
@@ -27,7 +28,8 @@ def train_usekmeans(data,options):
                 precompute_distances=options['precompute_distances'],
                 algorithm=options['algorithm']))
     model.fit(data['X_train'],data['y_train'])
-    return model.get_params()
+    y_pred = model.predict(data['X_valid'])
+    misc.Plot.plot_in_2d(data['X_valid'].values,y_pred)
 
 
 class Downleft(init_ui.downleft):
