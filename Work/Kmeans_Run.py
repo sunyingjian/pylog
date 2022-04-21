@@ -9,17 +9,17 @@ import sklearn.metrics as metrics
 import pandas as pd
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
-from utils import misc
+import matplotlib.pyplot as plta
 
 
-def data_process(train_path,validation_path,select_features,pre_feature):
+def data_process(train_path,select_features,pre_feature):
     train_data = pd.read_csv(train_path)
-    valid_data = pd.read_csv(validation_path)
+    # valid_data = pd.read_csv(validation_path)
     train_data_x = train_data.loc[:,select_features]
     train_data_y = train_data[pre_feature]
-    valid_data_x = valid_data.loc[:,select_features]
-    valid_data_y = valid_data[pre_feature]
-    data = {'X_train':train_data_x,'y_train':train_data_y,'X_valid':valid_data_x,'y_valid':valid_data_y}
+    # valid_data_x = valid_data.loc[:,select_features]
+    # valid_data_y = valid_data[pre_feature]
+    data = {'X_train':train_data_x,'y_train':train_data_y}
     return data
 
 def train_usekmeans(data,options):
@@ -28,9 +28,10 @@ def train_usekmeans(data,options):
                 precompute_distances=options['precompute_distances'],
                 algorithm=options['algorithm']))
     model.fit(data['X_train'],data['y_train'])
-    y_pred = model.predict(data['X_valid'])
-    misc.Plot.plot_in_2d(data['X_valid'].values,y_pred)
-
+    # y_pred = model.predict(data['X_valid'])
+    # plta.scatter(data['X_train'].values[:,0],data['X_train'].values[:,1],c=data['y_train'].values)
+    # plta.savefig('Work\image\Kmeans_result.png')
+    # return 0
 
 class Downleft(init_ui.downleft):
     def __init__(self):
@@ -221,10 +222,10 @@ class newMainWindow(QWidget):
 
     def fun_Run(self):
         print('进入fun_Run函数')
-        if (self.downleft.data_train != None) and (self.downleft.data_val != None) and (len(self.downleft.feature_selected) != 0) and (
+        if (self.downleft.data_train != None) and (len(self.downleft.feature_selected) != 0) and (
                 self.downleft.feature_pre != None):
             datafile_train = './data/' + self.downleft.data_train
-            datafile_test = './data/' + self.downleft.data_val
+            # datafile_test = './data/' + self.downleft.data_val
             data_test = pd.read_csv(datafile_train)
             n_clusters = self.downleft.spinBox.value()
             init = self.downleft.combox_init.currentText()
@@ -234,7 +235,7 @@ class newMainWindow(QWidget):
                        'init': init, 'precompute_distances': precompute_distances,
                        'algorithm': algorithm
                        }
-            data = data_process(datafile_train, datafile_test, self.downleft.feature_selected, self.downleft.feature_pre)
+            data = data_process(datafile_train, self.downleft.feature_selected, self.downleft.feature_pre)
             res = train_usekmeans(data, options)
             # 画图
             self.downright.showWidget.setText(str(res))
