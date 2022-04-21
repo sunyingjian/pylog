@@ -179,15 +179,12 @@ class Main_Win(QMainWindow):
                              "    font-family:微软雅黑;\n"
                              "    border: 1px solid DarkGray;\n"
                              "    font-size:24px;\n"
-                             "    background:rgb(255, 255, 255, 60);\n"
                              "}\n"
                              "QPushButton:hover{\n"
                              "    border: 1px solid Gray;\n"
-                             "    background:rgb(255, 255, 255, 90);\n"
                              "}\n"
                              "QPushButton:pressed{\n"
                              "    border: 2px solid DarkGray;\n"
-                             "    background:rgb(255, 255, 255, 30);\n"
                              "}")
 
     def tab1UI(self):
