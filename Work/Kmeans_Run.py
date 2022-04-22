@@ -9,7 +9,6 @@ import sklearn.metrics as metrics
 import pandas as pd
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
-import matplotlib.pyplot as plta
 
 
 def data_process(train_path,select_features,pre_feature):
@@ -28,10 +27,8 @@ def train_usekmeans(data,options):
                 precompute_distances=options['precompute_distances'],
                 algorithm=options['algorithm']))
     model.fit(data['X_train'],data['y_train'])
-    # y_pred = model.predict(data['X_valid'])
-    # plta.scatter(data['X_train'].values[:,0],data['X_train'].values[:,1],c=data['y_train'].values)
-    # plta.savefig('Work\image\Kmeans_result.png')
-    # return 0
+    y = model.predict(data['X_train'])
+    y.to_csv(f'./data/kmeans_y.csv',index=False)
 
 class Downleft(init_ui.downleft):
     def __init__(self):
@@ -236,9 +233,9 @@ class newMainWindow(QWidget):
                        'algorithm': algorithm
                        }
             data = data_process(datafile_train, self.downleft.feature_selected, self.downleft.feature_pre)
-            res = train_usekmeans(data, options)
+            train_usekmeans(data, options)
             # 画图
-            self.downright.showWidget.setText(str(res))
+            self.downright.showWidget.setText(str([(i,j) for i,j in options.items()])+'聚类文件已经保存在data文件夹下')
         print('退出fun_run函数')
     def showimage_topright(self):
             for i in range(self.downleft.layout_tab1_grid.count()):

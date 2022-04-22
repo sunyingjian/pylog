@@ -345,7 +345,9 @@ class downright_r(QWidget):
 
 class downright_cl(downright_r):
     def __init__(self):
-        super().__init__()
+        super(downright_r, self).__init__()
+        self.initUI()
+
     def initUI(self):
         self.hbox = QHBoxLayout()
         self.hbox1 = QHBoxLayout()
@@ -384,19 +386,3 @@ class downright_cl(downright_r):
         palette.setColor(self.showWidget.backgroundRole(), QColor(255, 255, 255))  # 背景颜色
         self.showWidget.setPalette(palette)
         self.showWidget.setAutoFillBackground(True)
-
-        def show_image(self):
-
-            self.showWidget = QLabel()
-            jpg = QPixmap('Work\image\Kmeans_result.png')
-            self.hbox1.addWidget(self.showWidget.setPixmap(jpg))
-            self.hbox2.addStretch(0)
-            self.hbox2.addStretch(1)
-            self.vbox.addLayout(self.hbox)
-            self.vbox.addLayout(self.hbox1)
-            self.vbox.addLayout(self.hbox2)
-            self.setLayout(self.vbox)
-            palette = QPalette()
-            palette.setColor(self.showWidget.backgroundRole(), QColor(255, 255, 255))  # 背景颜色
-            self.showWidget.setPalette(palette)
-            self.showWidget.setAutoFillBackground(True)
