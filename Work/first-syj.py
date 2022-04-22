@@ -21,6 +21,7 @@ import LSTMR_Run
 import RTCN_Run
 import SAPWFF_Run
 import LR_Run
+import LDA_Run
 import Lasso_Run
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import *
@@ -29,6 +30,7 @@ from PyQt5.QtWidgets import QApplication, QAction
 from PyQt5.QtGui import QIcon
 import pyqtgraph as pg
 from PyQt5 import QtWidgets
+import PCA_Run
 
 
 class Main_Win(QMainWindow):
@@ -307,6 +309,7 @@ class Main_Win(QMainWindow):
 
         btn_lda = QPushButton('LDA聚类')
         self.fontui((btn_lda))
+        btn_lda.clicked.connect(lambda: self.Add_Page(LDA_Run.newMainWindow()))
 
 
         layout1.addWidget(btn_kmeans,0,0,1,1,Qt.AlignTop)
@@ -322,6 +325,7 @@ class Main_Win(QMainWindow):
 
         btn_pca = QPushButton('PCA')
         self.fontui(btn_pca)
+        btn_pca.clicked.connect(lambda: self.Add_Page(PCA_Run.newMainWindow()))
 
         layout1.addWidget(btn_smote, 0, 0, 1, 1, Qt.AlignTop)
         layout1.addWidget(btn_pca, 0, 1, 1, 1, Qt.AlignTop)
