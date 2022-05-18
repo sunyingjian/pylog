@@ -112,7 +112,7 @@ class newMainWindow(QWidget):
         self.topright.setPalette(palette3)
         self.topright.setAutoFillBackground(True)
 
-        self.downright = init_ui.downright_c()
+        self.downright = init_ui.downright_l()
         palette4 = QPalette()
         palette4.setColor(self.downright.backgroundRole(), QColor(245, 245 ,245))  # 背景颜色
         self.downright.setPalette(palette4)
