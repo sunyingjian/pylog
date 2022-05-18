@@ -23,6 +23,7 @@ import RTCN_Run
 import SAPWFF_Run
 import LR_Run
 import LDA_Run
+import SMOTE_Run
 import Lasso_Run
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import *
@@ -323,6 +324,7 @@ class Main_Win(QMainWindow):
 
         btn_smote = QPushButton('SMOTE')
         self.fontui(btn_smote)
+        btn_smote.clicked.connect(lambda: self.Add_Page(SMOTE_Run.newMainWindow()))
 
         btn_pca = QPushButton('PCA')
         self.fontui(btn_pca)

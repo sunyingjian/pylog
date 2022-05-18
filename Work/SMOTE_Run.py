@@ -4,7 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 import init_ui
 import pandas as pd
-from sklearn.svm import SVC
+from imblearn.over_sampling import SMOTE
 import sklearn.metrics as metrics
 import pandas as pd
 from sklearn.pipeline import make_pipeline
@@ -21,8 +21,8 @@ def data_process(train_path,validation_path,select_features,pre_feature):
     data = {'X_train':train_data_x,'y_train':train_data_y,'X_valid':valid_data_x,'y_valid':valid_data_y}
     return data
 
-def train_useSVM(data,options):
-    model = make_pipeline(StandardScaler(),SVC(C=options['C'],
+def train_useSMOTE(data,options):
+    model = make_pipeline(StandardScaler(),SMOTE(C=options['C'],
                 kernel=options['kernel'],
                 gamma=options['gamma'],
                 decision_function_shape=options['decision_function_shape']))
@@ -44,50 +44,38 @@ class Downleft(init_ui.downleft):
     def tab3UI(self):
         vbox = QVBoxLayout()
         hbox = QHBoxLayout()
-        self.label_C = QLabel('惩罚系数C')
-        self.label_C.setEnabled(True)
+        self.sampling_strategy = QLabel('sampling_strategy')
+        self.sampling_strategy.setEnabled(True)
+        self.combox_sampling_strategy = QComboBox()
+        self.combox_sampling_strategy.setEnabled(True)
+        self.combox_sampling_strategy.addItem("")
+        self.combox_sampling_strategy.addItem("")
+        self.combox_sampling_strategy.setCurrentText("auto")
+        self.combox_sampling_strategy.setItemText(0, "auto")
+        self.k_neighbors = QLabel("k_neighbors")
+        self.k_neighbors.setEnabled(True)
         self.spinBox = QDoubleSpinBox()
         self.spinBox.setEnabled(True)
         self.spinBox.setPrefix("")
-        self.spinBox.setMinimum(0.0)
-        self.spinBox.setMaximum(10.1)
-        self.spinBox.setSingleStep(0.1)
-        self.spinBox.setProperty("value", 1.0)
+        self.spinBox.setMinimum(5)
+        self.spinBox.setMaximum(20)
+        self.spinBox.setSingleStep(1)
+        self.spinBox.setProperty("value", 5)
         self.spinBox.setObjectName("spinBox")
-        self.label_kernal = QLabel("Kernal")
-        self.label_kernal.setEnabled(True)
-        self.combox_kernal = QComboBox()
-        self.combox_kernal.setEnabled(True)
-        self.combox_kernal.addItem("")
-        self.combox_kernal.addItem("")
-        self.combox_kernal.addItem("")
-        self.combox_kernal.addItem("")
-        self.combox_kernal.setCurrentText("rbf")
-        self.combox_kernal.setItemText(0, "linear")
-        self.combox_kernal.setItemText(1, "poly")
-        self.combox_kernal.setItemText(2, "rbf")
-        self.combox_kernal.setItemText(3, "sigmoid")
-        self.label_gamma = QLabel("Gamma")
-        self.label_gamma.setEnabled(True)
-        self.combox_gamma = QComboBox()
-        self.combox_gamma.setEnabled(True)
-        self.combox_gamma.addItem("")
-        self.combox_gamma.addItem("")
-        self.combox_gamma.setItemText(0, "auto")
-        self.combox_gamma.setItemText(1, "scale")
-        self.label_DFS = QLabel("DFS")
-        self.label_DFS.setEnabled(True)
-        self.combox_DFS = QComboBox()
-        self.combox_DFS.setEnabled(True)
-        self.combox_DFS.addItem("")
-        self.combox_DFS.addItem("")
-        self.combox_DFS.setItemText(0, "ovr")
-        self.combox_DFS.setItemText(1, "ovo")
+        self.n_jobs = QLabel("n_jobs")
+        self.n_jobs.setEnabled(True)
+        self.spinBox1 = QDoubleSpinBox()
+        self.spinBox1.setEnabled(True)
+        self.spinBox1.setPrefix("")
+        self.spinBox1.setMinimum(1)
+        self.spinBox1.setMaximum(4)
+        self.spinBox1.setSingleStep(1)
+        self.spinBox1.setProperty("value", 1)
+        self.spinBox1.setObjectName("spinBox1")
         formLayout = QFormLayout()
-        formLayout.addRow(self.label_C,self.spinBox)
-        formLayout.addRow(self.label_kernal,self.combox_kernal)
-        formLayout.addRow(self.label_gamma,self.combox_gamma)
-        formLayout.addRow(self.label_DFS,self.combox_DFS)
+        formLayout.addRow(self.sampling_strategy,self.combox_sampling_strategy)
+        formLayout.addRow(self.k_neighbors,self.spinBox)
+        formLayout.addRow(self.n_jobs,self.spinBox1)
         hbox.addLayout(formLayout)
         vbox.addLayout(hbox)
         self.tab3.setLayout(vbox)
@@ -227,16 +215,14 @@ class newMainWindow(QWidget):
             datafile_train = './data/' + self.downleft.data_train
             datafile_test = './data/' + self.downleft.data_val
             data_test = pd.read_csv(datafile_train)
-            C = self.downleft.spinBox.value()
-            kernel = self.downleft.combox_kernal.currentText()
-            gamma = self.downleft.combox_gamma.currentText()
-            decision_function_shape = self.downleft.combox_DFS.currentText()
-            options = {'C': C,
-                       'kernel': kernel, 'gamma': gamma,
-                       'decision_function_shape': decision_function_shape
+            k_neighbors = self.downleft.spinBox.value()
+            n_jobs = self.downleft.spinBox1.value()
+            sampling_strategy = self.downleft.combox_sampling_strategy.currentText()
+            options = {'sampling_strategy': sampling_strategy,
+                       'n_jobs': n_jobs, 'k_neighbors': k_neighbors
                        }
             data = data_process(datafile_train, datafile_test, self.downleft.feature_selected, self.downleft.feature_pre)
-            res = train_useSVM(data, options)
+            res = train_useSMOTE(data, options)
             self.downright.textLine_acc.setText(str(res['acc']))
             self.downright.textLine_recall.setText(str(res['recall_score']))
             self.downright.textLine_f1.setText(str(res['f1_score']))
