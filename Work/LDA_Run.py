@@ -4,7 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 import init_ui
 import pandas as pd
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.decomposition import PCA
 import sklearn.metrics as metrics
 import pandas as pd
 from sklearn.pipeline import make_pipeline
@@ -21,10 +21,11 @@ def data_process(train_path,validation_path,select_features,pre_feature):
     data = {'X_train':train_data_x,'y_train':train_data_y,'X_valid':valid_data_x,'y_valid':valid_data_y}
     return data
 
-def train_usePCA(data,options):
-    model = make_pipeline(StandardScaler(),LinearDiscriminantAnalysis(n_components=int(options['n_components']),
-                store_convariance=options['store_convariance'],
-                solver=options['solver']))
+def train_useSVM(data,options):
+    model = make_pipeline(StandardScaler(),PCA(C=options['C'],
+                kernel=options['kernel'],
+                gamma=options['gamma'],
+                decision_function_shape=options['decision_function_shape']))
     model.fit(data['X_train'],data['y_train'])
     y_pred = model.predict(data['X_valid'])
     acc = metrics.precision_score(data['y_valid'],y_pred,average='micro')
@@ -43,49 +44,47 @@ class Downleft(init_ui.downleft):
     def tab3UI(self):
         vbox = QVBoxLayout()
         hbox = QHBoxLayout()
-        self.label_n_components = QLabel('n_components:')
-        self.label_n_components.setEnabled(True)
+        self.n_components = QLabel('n_components')
+        self.n_components.setEnabled(True)
         self.spinBox = QDoubleSpinBox()
         self.spinBox.setEnabled(True)
         self.spinBox.setPrefix("")
-        self.spinBox.setMinimum(2)
-        self.spinBox.setMaximum(100)
-        self.spinBox.setSingleStep(1)
-        self.spinBox.setProperty("value", 8)
+        self.spinBox.setMinimum(0.0)
+        self.spinBox.setMaximum(10.1)
+        self.spinBox.setSingleStep(0.1)
+        self.spinBox.setProperty("value", 1.0)
         self.spinBox.setObjectName("spinBox")
-        self.label_store_convariance = QLabel("store_convariance")
-        self.label_store_convariance.setEnabled(True)
-        self.combox_store_convariance= QComboBox()
-        self.combox_store_convariance.setEnabled(True)
-        self.combox_store_convariance.addItem("")
-        self.combox_store_convariance.addItem("")
-        self.combox_store_convariance.setCurrentText("False")
-        self.combox_store_convariance.setItemText(0, "False")
-        self.combox_store_convariance.setItemText(1, "True")
-        self.label_solver = QLabel("svd_solver:")
-        self.label_solver.setEnabled(True)
-        self.combox_solvers = QComboBox()
-        self.combox_solver.setEnabled(True)
-        self.combox_solver.addItem("")        
-        self.combox_solver.addItem("")
-        self.combox_solver.addItem("")
-        self.combox_solver.setCurrentText("svd")
-        self.combox_solver.setItemText(0, "svd")
-        self.combox_solver.setItemText(1, "lsqr")
-        self.combox_solver.setItemText(2, "eigen")
+        self.copy = QLabel("copy")
+        self.copy.setEnabled(True)
+        self.combox_copy = QComboBox()
+        self.combox_copy.setEnabled(True)
+        self.combox_copy.addItem("")
+        self.combox_copy.addItem("")
+        self.combox_copy.setCurrentText("True")
+        self.combox_copy.setItemText(0, "True")
+        self.combox_copy.setItemText(1, "False")
+        self.label_whiten = QLabel("whiten")
+        self.label_whiten.setEnabled(True)
+        self.combox_whiten = QComboBox()
+        self.combox_whiten.setEnabled(True)
+        self.combox_whiten.addItem("")
+        self.combox_whiten.addItem("")
+        self.combox_whiten.setItemText(0, "False")
+        self.combox_whiten.setItemText(1, "True")
         formLayout = QFormLayout()
-        formLayout.addRow(self.label_n_components,self.spinBox)
+        formLayout.addRow(self.n_components,self.spinBox)
+        formLayout.addRow(self.copy,self.combox_copy)
         formLayout.addRow(self.label_whiten,self.combox_whiten)
-        formLayout.addRow(self.label_svd_solver,self.combox_svd_solver)
         hbox.addLayout(formLayout)
         vbox.addLayout(hbox)
         self.tab3.setLayout(vbox)
+
 
 class newMainWindow(QWidget):
     def __init__(self):
         super(newMainWindow, self).__init__()
         self.initUI()
-        self.setObjectName('LDA')
+        self.setObjectName('PCA')
 
     def initUI(self):
         # self.widget = QWidget()
@@ -112,7 +111,7 @@ class newMainWindow(QWidget):
         self.topright.setPalette(palette3)
         self.topright.setAutoFillBackground(True)
 
-        self.downright = init_ui.downright_l()
+        self.downright = init_ui.downright_c()
         palette4 = QPalette()
         palette4.setColor(self.downright.backgroundRole(), QColor(245, 245 ,245))  # 背景颜色
         self.downright.setPalette(palette4)
@@ -210,22 +209,26 @@ class newMainWindow(QWidget):
 
     def fun_Run(self):
         print('进入fun_Run函数')
-        if (self.downleft.data_train != None) and (len(self.downleft.feature_selected) != 0) and (
+        if (self.downleft.data_train != None) and (self.downleft.data_val != None) and (len(self.downleft.feature_selected) != 0) and (
                 self.downleft.feature_pre != None):
             datafile_train = './data/' + self.downleft.data_train
-            # datafile_test = './data/' + self.downleft.data_val
+            datafile_test = './data/' + self.downleft.data_val
             data_test = pd.read_csv(datafile_train)
-            n_components = self.downleft.spinBox.value()
-            store_convariance = self.downleft.combox_whiten.currentText()
-            solver	 = self.downleft.combox_svd_solver.currentText()
-            options = {'n_components': n_components,
-                       'store_convariance': store_convariance,
-                       'solver': solver
+            C = self.downleft.spinBox.value()
+            kernel = self.downleft.combox_kernal.currentText()
+            gamma = self.downleft.combox_gamma.currentText()
+            decision_function_shape = self.downleft.combox_DFS.currentText()
+            options = {'C': C,
+                       'kernel': kernel, 'gamma': gamma,
+                       'decision_function_shape': decision_function_shape
                        }
-            data = data_process(datafile_train, self.downleft.feature_selected, self.downleft.feature_pre)
-            res = train_usePCA(data, options)
-            # 画图
-            self.downright.showWidget.setText(str(res))
+            data = data_process(datafile_train, datafile_test, self.downleft.feature_selected, self.downleft.feature_pre)
+            res = train_useSVM(data, options)
+            self.downright.textLine_acc.setText(str(res['acc']))
+            self.downright.textLine_recall.setText(str(res['recall_score']))
+            self.downright.textLine_f1.setText(str(res['f1_score']))
+            print(str(res['confusion_matrix']))
+            self.downright.showWidget.setText(str(res['confusion_matrix']))
         print('退出fun_run函数')
     def showimage_topright(self):
             for i in range(self.downleft.layout_tab1_grid.count()):
