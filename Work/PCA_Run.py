@@ -4,7 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 import init_ui
 import pandas as pd
-from sklearn.svm import SVC
+from sklearn.decomposition import PCA
 import sklearn.metrics as metrics
 import pandas as pd
 from sklearn.pipeline import make_pipeline
@@ -22,7 +22,7 @@ def data_process(train_path,validation_path,select_features,pre_feature):
     return data
 
 def train_useSVM(data,options):
-    model = make_pipeline(StandardScaler(),SVC(C=options['C'],
+    model = make_pipeline(StandardScaler(),PCA(C=options['C'],
                 kernel=options['kernel'],
                 gamma=options['gamma'],
                 decision_function_shape=options['decision_function_shape']))
@@ -44,8 +44,8 @@ class Downleft(init_ui.downleft):
     def tab3UI(self):
         vbox = QVBoxLayout()
         hbox = QHBoxLayout()
-        self.label_C = QLabel('惩罚系数C')
-        self.label_C.setEnabled(True)
+        self.n_components = QLabel('n_components')
+        self.n_components.setEnabled(True)
         self.spinBox = QDoubleSpinBox()
         self.spinBox.setEnabled(True)
         self.spinBox.setPrefix("")
@@ -54,40 +54,27 @@ class Downleft(init_ui.downleft):
         self.spinBox.setSingleStep(0.1)
         self.spinBox.setProperty("value", 1.0)
         self.spinBox.setObjectName("spinBox")
-        self.label_kernal = QLabel("Kernal")
-        self.label_kernal.setEnabled(True)
-        self.combox_kernal = QComboBox()
-        self.combox_kernal.setEnabled(True)
-        self.combox_kernal.addItem("")
-        self.combox_kernal.addItem("")
-        self.combox_kernal.addItem("")
-        self.combox_kernal.addItem("")
-        self.combox_kernal.setCurrentText("rbf")
-        self.combox_kernal.setItemText(0, "linear")
-        self.combox_kernal.setItemText(1, "poly")
-        self.combox_kernal.setItemText(2, "rbf")
-        self.combox_kernal.setItemText(3, "sigmoid")
-        self.label_gamma = QLabel("Gamma")
-        self.label_gamma.setEnabled(True)
-        self.combox_gamma = QComboBox()
-        self.combox_gamma.setEnabled(True)
-        self.combox_gamma.addItem("")
-        self.combox_gamma.addItem("")
-        self.combox_gamma.setItemText(0, "auto")
-        self.combox_gamma.setItemText(1, "scale")
-        self.label_DFS = QLabel("DFS")
-        self.label_DFS.setEnabled(True)
-        self.combox_DFS = QComboBox()
-        self.combox_DFS.setEnabled(True)
-        self.combox_DFS.addItem("")
-        self.combox_DFS.addItem("")
-        self.combox_DFS.setItemText(0, "ovr")
-        self.combox_DFS.setItemText(1, "ovo")
+        self.copy = QLabel("copy")
+        self.copy.setEnabled(True)
+        self.combox_copy = QComboBox()
+        self.combox_copy.setEnabled(True)
+        self.combox_copy.addItem("")
+        self.combox_copy.addItem("")
+        self.combox_copy.setCurrentText("True")
+        self.combox_copy.setItemText(0, "True")
+        self.combox_copy.setItemText(1, "False")
+        self.label_whiten = QLabel("whiten")
+        self.label_whiten.setEnabled(True)
+        self.combox_whiten = QComboBox()
+        self.combox_whiten.setEnabled(True)
+        self.combox_whiten.addItem("")
+        self.combox_whiten.addItem("")
+        self.combox_whiten.setItemText(0, "False")
+        self.combox_whiten.setItemText(1, "True")
         formLayout = QFormLayout()
-        formLayout.addRow(self.label_C,self.spinBox)
-        formLayout.addRow(self.label_kernal,self.combox_kernal)
-        formLayout.addRow(self.label_gamma,self.combox_gamma)
-        formLayout.addRow(self.label_DFS,self.combox_DFS)
+        formLayout.addRow(self.n_components,self.spinBox)
+        formLayout.addRow(self.copy,self.combox_copy)
+        formLayout.addRow(self.label_whiten,self.combox_whiten)
         hbox.addLayout(formLayout)
         vbox.addLayout(hbox)
         self.tab3.setLayout(vbox)

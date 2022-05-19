@@ -313,7 +313,6 @@ class Main_Win(QMainWindow):
         self.fontui((btn_lda))
         btn_lda.clicked.connect(lambda: self.Add_Page(LDA_Run.newMainWindow()))
 
-
         layout1.addWidget(btn_kmeans,0,0,1,1,Qt.AlignTop)
         layout1.addWidget(btn_lda,0,1,1,1,Qt.AlignTop)
 
